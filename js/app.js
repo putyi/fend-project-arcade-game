@@ -1,6 +1,6 @@
 // Enemies our player must avoid
 class Enemy {
-    constructor(x, y) {
+    constructor(x, y, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -9,6 +9,7 @@ class Enemy {
     this.sprite = 'images/enemy-bug.png';
     this.x = x;
     this.y = y;
+    this.speed = speed;
     }
 
     // Update the enemy's position, required method for game
@@ -17,6 +18,13 @@ class Enemy {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+        if (this.x < 505) {
+            (this.x += this.speed) * dt;
+        } else {
+            this.x = -100;
+            this.y = 71 * Math.floor((Math.random() * 3) + 1);
+            //70, 142, 213
+            }
     }
 
 // Draw the enemy on the screen, required method for game
@@ -51,9 +59,9 @@ class Player {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 const allEnemies = [
-    enemy1 = new Enemy(-50, 65),
-    enemy2 = new Enemy(0, 145),
-    enemy3 = new Enemy(0, 230)
+    enemy1 = new Enemy(-100, 70, 8),
+    enemy2 = new Enemy(-100, 140, 6),
+    enemy3 = new Enemy(-100, 210, 4.5)
 ];
 
 const player = new Player(300, 420);
