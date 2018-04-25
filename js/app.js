@@ -51,9 +51,36 @@ class Player {
     render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
-    handleInput() {
+
+   handleInput(keyInput) {
     //TODO handle the keys...
-    }
+    const input = keyInput;
+        if (input === 'left') {
+            if (this.x === -20) {
+                this.x = -20;
+            } else {
+                this.x -= 5;
+            } 
+        } else if (input === 'up') {
+            if (this.y === -10) {
+                this.y = -10;
+            } else {
+                this.y -= 5;
+            }
+        } else if (input === 'right') {
+            if (this.x === 425) {
+                this.x === 425
+            } else {
+                this.x += 5;
+            }
+        } else if (input === 'down') {
+            if (this.y === 445) {
+                this.y = 445;
+            } else {
+            this.y += 5;
+            }
+        }
+    } 
 }
 
 // Now instantiate your objects.
@@ -71,13 +98,16 @@ const player = new Player(300, 420);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
+document.addEventListener('keydown', function(e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',
         39: 'right',
         40: 'down'
     };
+    //console.log(e);
+    //console.log(allowedKeys[e.keyCode]);
 
     player.handleInput(allowedKeys[e.keyCode]);
+        
 });
