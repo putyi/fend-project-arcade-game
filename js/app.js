@@ -10,6 +10,8 @@ class Enemy {
     this.x = x;
     this.y = y;
     this.speed = speed;
+    this.rightCoord = this.x + 101;
+    this.downCoord = this.y + 171;
     }
 
     // Update the enemy's position, required method for game
@@ -20,10 +22,11 @@ class Enemy {
     // all computers.
         if (this.x < 505) {
             (this.x += this.speed) * dt;
+            (this.rightCoord  += this.speed) * dt;
         } else {
             this.x = -100;
+            this.rightCoord = 1;
             this.y = 71 * Math.floor((Math.random() * 3) + 1);
-            //70, 142, 213
             }
     }
 
@@ -41,11 +44,17 @@ class Player {
         this.sprite = 'images/char-boy.png';
         this.x = x;
         this.y = y;
+        this.rightCoord = this.x + 101;
+        this.downCoord = this.y + 171;
     }
 
 // This class requires an update(), render() and
 // a handleInput() method.
-    update() {
+    update(dt) {
+        this.x * dt;
+        this.y * dt;
+        this.rightCoord * dt;
+        this.downCoord * dt;
     }
 
     render() {
@@ -55,32 +64,29 @@ class Player {
    handleInput(keyInput) {
     //TODO handle the keys...
     const input = keyInput;
+
         if (input === 'left') {
-            if (this.x === -20) {
-                this.x = -20;
-            } else {
-                this.x -= 5;
-            } 
+            if (this.x > -10) {
+                this.x -= 10;
+                this.rightCoord -= 10;
+            }
         } else if (input === 'up') {
-            if (this.y === -10) {
-                this.y = -10;
-            } else {
-                this.y -= 5;
+                if (this.y > -10) {
+                this.y -= 10;
+                this.downCoord -= 10;
             }
         } else if (input === 'right') {
-            if (this.x === 425) {
-                this.x === 425
-            } else {
-                this.x += 5;
+            if (this.x < 420) {
+                this.x += 10;
+                this.rightCoord += 10;
             }
         } else if (input === 'down') {
-            if (this.y === 445) {
-                this.y = 445;
-            } else {
-            this.y += 5;
+            if (this.y <= 430) {
+                this.y += 10;
+                this.rightCoord += 10;
             }
         }
-    } 
+    }
 }
 
 // Now instantiate your objects.
@@ -111,3 +117,12 @@ document.addEventListener('keydown', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
         
 });
+
+function checkCollisions() {
+    //if (this.allEnemies[0] < player.x) {
+    //    player.x = -10;
+    //}
+    if (allEnemies[0].rightCoord >= player.x) {
+        player.x = -10;
+    }; 
+};
