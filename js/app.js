@@ -1,3 +1,22 @@
+const div1 = document.createElement("div");
+const body = document.querySelector("body");
+const div2 = document.createElement("div");
+body.appendChild(div1);
+div1.style.color = "red";
+div1.style.fontSize = "xx-large";
+
+let nrLives = 3;
+div1.textContent = `NR OF LIVES: ${nrLives}`;
+
+body.appendChild(div2);
+div2.style.position = "absolute";
+div2.style.width = "100%";
+div2.style.backgroundColor = "#fab303";
+div2.style.opacity = "0.6";
+div2.innerHTML = "<p>GAME OVER!</p>";
+div2.style.fontSize = "148px";
+div2.style.visibility = "hidden";
+
 // Enemies our player must avoid
 class Enemy {
     constructor(x, y, speed) {
@@ -10,8 +29,8 @@ class Enemy {
     this.x = x;
     this.y = y;
     this.speed = speed;
-    this.rightCoord = this.x + 101;
-    this.downCoord = this.y + 171;
+    this.rightCoord = this.x + 75;
+    this.downCoord = this.y + 71;
     }
 
     // Update the enemy's position, required method for game
@@ -25,14 +44,17 @@ class Enemy {
             (this.rightCoord  += this.speed) * dt;
         } else {
             this.x = -100;
-            this.rightCoord = 1;
+            this.rightCoord = -5;
             this.y = 71 * Math.floor((Math.random() * 3) + 1);
-            }
+            this.downCoord = this.y + 71;
+            //console.log(this.y);
+            //console.log(this.downCoord);
+        }
     }
 
 // Draw the enemy on the screen, required method for game
     render() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
 }
 
@@ -40,64 +62,68 @@ class Enemy {
 
 // Now write your own player class
 class Player {
-    constructor(x,y) {
+    constructor(x, y, speed) {
         this.sprite = 'images/char-boy.png';
         this.x = x;
         this.y = y;
         this.rightCoord = this.x + 101;
-        this.downCoord = this.y + 171;
+        this.downCoord = this.y + 61;
+        this.speed = speed;
     }
 
 // This class requires an update(), render() and
 // a handleInput() method.
-    update(dt) {
+   update(dt) {
+       if (player.y === -5) {
+           water();
+       } else {
         this.x * dt;
         this.y * dt;
         this.rightCoord * dt;
         this.downCoord * dt;
+       }
     }
 
     render() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
 
-   handleInput(keyInput) {
+    handleInput(keyInput) {
     //TODO handle the keys...
-    const input = keyInput;
 
-        if (input === 'left') {
-            if (this.x > -10) {
-                this.x -= 10;
-                this.rightCoord -= 10;
-            }
-        } else if (input === 'up') {
-                if (this.y > -10) {
-                this.y -= 10;
-                this.downCoord -= 10;
-            }
-        } else if (input === 'right') {
-            if (this.x < 420) {
-                this.x += 10;
-                this.rightCoord += 10;
-            }
-        } else if (input === 'down') {
-            if (this.y <= 430) {
-                this.y += 10;
-                this.rightCoord += 10;
-            }
-        }
-    }
+            if (keyInput === 'left') {
+                if (this.x > -10) {
+                    this.x -= this.speed;
+                    this.rightCoord = this.x + 101;
+                }
+            } else if (keyInput === 'up') {
+                    if (this.y >= 0) {
+                    this.y -= this.speed;
+                    this.downCoord = this.y + 61;
+                    }
+            } else if (keyInput === 'right') {
+                if (this.x < 420) {
+                    this.x += this.speed;
+                    this.rightCoord = this.x + 101;
+                }
+            } else if (keyInput === 'down') {
+                if (this.y <= 430) {
+                    this.y += this.speed;
+                    this.downCoord = this.y + 61;
+                }
+            }  
+    }    
 }
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 const allEnemies = [
-    enemy1 = new Enemy(-100, 70, 8),
-    enemy2 = new Enemy(-100, 140, 6),
-    enemy3 = new Enemy(-100, 210, 4.5)
+    enemy1 = new Enemy(-100, 71, 2.8),
+    enemy2 = new Enemy(-100, 142, 1.5),
+    enemy3 = new Enemy(-100, 213, 1)
 ];
 
-const player = new Player(300, 420);
+const player = new Player(300, 420, 5);
 // Place the player object in a variable called player
 
 
@@ -111,18 +137,48 @@ document.addEventListener('keydown', function(e) {
         39: 'right',
         40: 'down'
     };
-    //console.log(e);
-    //console.log(allowedKeys[e.keyCode]);
 
-    player.handleInput(allowedKeys[e.keyCode]);
-        
+    player.handleInput(allowedKeys[e.keyCode]);        
 });
 
 function checkCollisions() {
-    //if (this.allEnemies[0] < player.x) {
-    //    player.x = -10;
-    //}
-    if (allEnemies[0].rightCoord >= player.x) {
-        player.x = -10;
-    }; 
+    if (((player.x <= enemy1.rightCoord && player.x >= enemy1.x) &&
+        (player.y <= enemy1.downCoord && player.downCoord >= enemy1.y))
+        || ((player.x <= enemy2.rightCoord && player.x >= enemy2.x) &&
+        (player.y <= enemy2.downCoord && player.downCoord >= enemy2.y))
+        || ((player.x <= enemy3.rightCoord && player.x >= enemy3.x) &&
+        (player.y <= enemy3.downCoord && player.downCoord >= enemy3.y))) {
+            player.x = 300; 
+            player.y = 420;
+            nrLives -= 1;
+            div1.textContent = `NR OF LIVES: ${nrLives}`;
+            if (nrLives === 0) {
+                div2.innerHTML = "<p>GAME OVER!</p>";
+                div2.align = "center";
+                div2.style.visibility = "visible";
+                enemy1.speed = 0;
+                enemy2.speed = 0;
+                enemy3.speed = 0;
+                player.speed = 0;
+            }
+    };
 };
+
+
+
+function water() {
+    player.x = 300;
+    player.y = 420;
+    nrLives += 1;
+    div1.textContent = `NR OF LIVES: ${nrLives}`;
+    if (nrLives === 5) {
+        div2.innerHTML = "<p>YOU WON!</p>";
+        div2.align = "center";
+        div2.style.visibility = "visible";
+        enemy1.speed = 0;
+        enemy2.speed = 0;
+        enemy3.speed = 0;
+        player.speed = 0;
+    }
+}
+
