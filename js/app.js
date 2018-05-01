@@ -1,12 +1,14 @@
+//TODO create score table...
 const div1 = document.createElement("div");
 const body = document.querySelector("body");
-const div2 = document.createElement("div");
 body.appendChild(div1);
 div1.style.cssText = "color: red; font-size: xx-large";
 
 let nrLives = 3;
 div1.textContent = `NR OF LIVES: ${nrLives}`;
 
+//TODO create final message pushup
+const div2 = document.createElement("div");
 body.appendChild(div2);
 div2.style.cssText = "position: absolute; width: 100%; background-color: #fab303; opacity: 0.6; font-size: 148px; visibility: hidden";
 
