@@ -2,20 +2,13 @@ const div1 = document.createElement("div");
 const body = document.querySelector("body");
 const div2 = document.createElement("div");
 body.appendChild(div1);
-div1.style.color = "red";
-div1.style.fontSize = "xx-large";
+div1.style.cssText = "color: red; font-size: xx-large";
 
 let nrLives = 3;
 div1.textContent = `NR OF LIVES: ${nrLives}`;
 
 body.appendChild(div2);
-div2.style.position = "absolute";
-div2.style.width = "100%";
-div2.style.backgroundColor = "#fab303";
-div2.style.opacity = "0.6";
-div2.innerHTML = "<p>GAME OVER!</p>";
-div2.style.fontSize = "148px";
-div2.style.visibility = "hidden";
+div2.style.cssText = "position: absolute; width: 100%; background-color: #fab303; opacity: 0.6; font-size: 148px; visibility: hidden";
 
 // Enemies our player must avoid
 class Enemy {
@@ -47,8 +40,6 @@ class Enemy {
             this.rightCoord = -5;
             this.y = 71 * Math.floor((Math.random() * 3) + 1);
             this.downCoord = this.y + 71;
-            //console.log(this.y);
-            //console.log(this.downCoord);
         }
     }
 
@@ -57,8 +48,6 @@ class Enemy {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
 }
-
-
 
 // Now write your own player class
 class Player {
@@ -88,9 +77,9 @@ class Player {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
 
-    handleInput(keyInput) {
     //TODO handle the keys...
-
+    handleInput(keyInput) {
+    
             if (keyInput === 'left') {
                 if (this.x > -10) {
                     this.x -= this.speed;
@@ -111,8 +100,8 @@ class Player {
                     this.y += this.speed;
                     this.downCoord = this.y + 61;
                 }
-            }  
-    }    
+            }
+    }
 }
 
 // Now instantiate your objects.
@@ -138,9 +127,10 @@ document.addEventListener('keydown', function(e) {
         40: 'down'
     };
 
-    player.handleInput(allowedKeys[e.keyCode]);        
+    player.handleInput(allowedKeys[e.keyCode]);
 });
 
+//TODO check collisions: what if...
 function checkCollisions() {
     if (((player.x <= enemy1.rightCoord && player.x >= enemy1.x) &&
         (player.y <= enemy1.downCoord && player.downCoord >= enemy1.y))
@@ -148,13 +138,12 @@ function checkCollisions() {
         (player.y <= enemy2.downCoord && player.downCoord >= enemy2.y))
         || ((player.x <= enemy3.rightCoord && player.x >= enemy3.x) &&
         (player.y <= enemy3.downCoord && player.downCoord >= enemy3.y))) {
-            player.x = 300; 
+            player.x = 300;
             player.y = 420;
             nrLives -= 1;
             div1.textContent = `NR OF LIVES: ${nrLives}`;
             if (nrLives === 0) {
                 div2.innerHTML = "<p>GAME OVER!</p>";
-                div2.align = "center";
                 div2.style.visibility = "visible";
                 enemy1.speed = 0;
                 enemy2.speed = 0;
@@ -164,8 +153,7 @@ function checkCollisions() {
     };
 };
 
-
-
+//TODO: the player reaches the water... what's next?
 function water() {
     player.x = 300;
     player.y = 420;
@@ -173,7 +161,6 @@ function water() {
     div1.textContent = `NR OF LIVES: ${nrLives}`;
     if (nrLives === 5) {
         div2.innerHTML = "<p>YOU WON!</p>";
-        div2.align = "center";
         div2.style.visibility = "visible";
         enemy1.speed = 0;
         enemy2.speed = 0;
@@ -181,4 +168,3 @@ function water() {
         player.speed = 0;
     }
 }
-
