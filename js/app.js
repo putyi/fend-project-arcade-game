@@ -64,14 +64,14 @@ class Player {
 
 // This class requires an update(), render() and
 // a handleInput() method.
-   update(dt) {
+   update() {
        if (player.y === -5) {
            water();
        } else {
-        this.x * dt;
-        this.y * dt;
-        this.rightCoord * dt;
-        this.downCoord * dt;
+        this.x;
+        this.y;
+        this.rightCoord;
+        this.downCoord;
        }
     }
 
